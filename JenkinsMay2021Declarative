@@ -1,0 +1,64 @@
+pipeline{
+
+agent any
+
+triggers{
+     pollSCM('* * * * *')
+	 }
+	 
+options{
+timestamps()
+buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5'))
+}		 
+
+tools{
+maven "maven3.6.3"
+}
+
+stages{
+
+stage('Checkoutcode'){
+steps{
+git branch: 'development', credentialsId: '1326db46-fc1f-4681-b41b-03cfcc8cbd9e', url: 'https://github.com/SathishS31/maven-web-application.git'
+ }
+ }
+ 
+ stage('Build'){
+ 
+ steps{
+ sh "mvn clean package"
+ }
+ }
+ 
+ stage('ExecuteSonarQubeReport'){
+ 
+ steps{
+ sh "mvn clean sonar:sonar"
+ }
+ }
+ 
+ stage('UploadArtifactIntoNexus'){
+ 
+ steps{
+ sh "mvn clean deploy"
+ }
+ }
+ 
+ stage('DeployAppIntoTomcatServer'){
+ 
+ steps{
+ sshagent(['5b314819-a855-401f-8506-280528b60c41']) {
+        sh "scp -o StrictHostKeyChecking=no target/maven-web-application.war ec2-user@65.2.131.128:/opt/apache-tomcat-9.0.46/webapps/"
+ }
+ }
+ }
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ 
+ }
+ }
