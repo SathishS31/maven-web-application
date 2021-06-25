@@ -29,7 +29,7 @@ git branch: 'development', credentialsId: '1326db46-fc1f-4681-b41b-03cfcc8cbd9e'
  sh "mvn clean package"
  }
  }
- 
+ /*
  stage('ExecuteSonarQubeReport'){
  
  steps{
@@ -52,7 +52,7 @@ git branch: 'development', credentialsId: '1326db46-fc1f-4681-b41b-03cfcc8cbd9e'
  }
  }
  }
- 
+ */
  
  
  
